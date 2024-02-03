@@ -26,13 +26,13 @@ def get_place_by_city(city_id=""):
                 abort(400, "Missing name")
             if "user_id" not in data:
                 abort(400, "Missing user_id")
-            if len([v for k, v in storage.all("User") if k.
+            if len([v for k, v in storage.all("User").items() if k.
                     split(".")[1] == data["user_id"]]) == 0:
-                   abort(404)
-            new_place = Place(**data)
-            storage.new(new_city)
+                abort(404)
+            new_place = Place(city_id=city_id, **data)
+            storage.new(new_place)
             storage.save()
-            return jsonify(new_city.to_dict()), 201
+            return jsonify(new_place.to_dict()), 201
         abort(400, "Not a JSON")
 
 
