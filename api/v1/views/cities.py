@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""CITY API"""
 from api.v1.views import app_views
 from models import storage
 from models.city import City
