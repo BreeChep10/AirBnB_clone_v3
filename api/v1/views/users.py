@@ -8,12 +8,14 @@ from flask import jsonify, abort, request
 
 @app_views.route("/users", methods=['GET', 'POST'], strict_slashes=False)
 def users_fetch():
-    """GETS ALL AMENITIES"""
+    """GETS ALL USERS"""
     if request.method == 'POST':
         data = request.get_json()
         if data is not None:
-            if 'name' not in data:
-                abort(400, "Missing name")
+            if 'email' not in data:
+                abort(400, "Missing email")
+            if 'password' not in data:
+                abort(400, "Missing password")
             new = User(**data)
             storage.new(new)
             storage.save()
@@ -27,7 +29,7 @@ def users_fetch():
 @app_views.route("/users/<user_id>",
                  methods=["GET", "DELETE", "PUT"], strict_slashes=False)
 def users_by_id(user_id=""):
-    """GETS AN AMENITY  BY ID AND OR DELETES IT OR UPDATES IT"""
+    """GETS USERS  BY ID AND OR DELETES IT OR UPDATES IT"""
     result = [v for k, v in storage.all("User").
               items() if k.split(".")[1] == user_id]
     if result == []:
