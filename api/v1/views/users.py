@@ -2,34 +2,34 @@
 """AMENITIES API"""
 from api.v1.views import app_views
 from models import storage
-from models.amenity import Amenity
+from models.user import User
 from flask import jsonify, abort, request
 
 
-@app_views.route("/amenities", methods=['GET', 'POST'], strict_slashes=False)
-def amenities_fetch():
+@app_views.route("/users", methods=['GET', 'POST'], strict_slashes=False)
+def users_fetch():
     """GETS ALL AMENITIES"""
     if request.method == 'POST':
         data = request.get_json()
         if data is not None:
             if 'name' not in data:
                 abort(400, "Missing name")
-            new = Amenity(**data)
+            new = User(**data)
             storage.new(new)
             storage.save()
             return jsonify(new.to_dict()), 201
         abort(400, "Not  a JSON")
     elif request.method == "GET":
-        amenities = storage.all("Amenity").values()
-        return jsonify([obj.to_dict() for obj in amenities])
+        users = storage.all("User").values()
+        return jsonify([obj.to_dict() for obj in users])
 
 
-@app_views.route("/amenities/<amenity_id>",
+@app_views.route("/users/<user_id>",
                  methods=["GET", "DELETE", "PUT"], strict_slashes=False)
-def amenities_by_id(amenity_id=""):
+def users_by_id(user_id=""):
     """GETS AN AMENITY  BY ID AND OR DELETES IT OR UPDATES IT"""
-    result = [v for k, v in storage.all("Amenity").
-              items() if k.split(".")[1] == amenity_id]
+    result = [v for k, v in storage.all("User").
+              items() if k.split(".")[1] == user_id]
     if result == []:
         abort(404)
     if request.method == "DELETE":
