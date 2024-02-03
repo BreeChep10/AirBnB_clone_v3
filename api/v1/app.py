@@ -3,7 +3,7 @@
 
 
 from os import getenv
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, jsonify
 from models import storage
 from api.v1.views import app_views
 
@@ -13,8 +13,14 @@ app.register_blueprint(app_views)
 
 @app.teardown_appcontext
 def teardown_appcontext(cmd):
-    """closes current session"""
+    """CLOSES CURRENT SESSION"""
     storage.close()
+
+
+@app.errorhandler(404)
+def error_404(error):
+    """HANDLES PAGE NOT FOUND(404)"""
+    return jsonify({'error': 'Not found'}), 404
 
 
 if __name__ == "__main__":
