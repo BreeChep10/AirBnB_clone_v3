@@ -49,12 +49,14 @@ def delete_link_amenity(place_id, amenity_id):
         if amenity[0] not in place[0].amenities:
             abort(404)
         place[0].amenities.remove(amenity[0])
+        storage.save()
         return jsonify({}), 200
 
     elif request.method == 'DELETE':
         if amenity[0].id not in place[0].amenity_ids:
             abort(404)
         place[0].amenity_ids.remove(amenity[0].id)
+        storage.save()
         return jsonify({}), 200
 
     if request.method == 'POST' and getenv("HBNB_TYPE_STORAGE") == "db":
