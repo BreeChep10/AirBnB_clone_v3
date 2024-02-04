@@ -4,10 +4,12 @@
 
 from os import getenv
 from flask import Flask, Blueprint, jsonify
+from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(app_views)
 
 
