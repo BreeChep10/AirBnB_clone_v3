@@ -17,8 +17,8 @@ def get_reviews_by_place(place_id):
     """
     GET ALL REVIES BY PLACE
     """
-    place = storage.get(Place, place_id)
-    if place is None:
+    place = storage.get("Place", place_id)
+    if not place:
         abort(404)
 
     reviews = [review.to_dict() for review in place.reviews]
@@ -31,7 +31,7 @@ def get_review(review_id):
     """
     GET REVIEW BY ID
     """
-    review = storage.get(Review, review_id)
+    review = storage.get("Review", review_id)
     if review is None:
         abort(404)
     return jsonify(review.to_dict())
@@ -43,7 +43,7 @@ def delete_review(review_id):
     """
     DELETE REVIEW BY ID
     """
-    review = storage.get(Review, review_id)
+    review = storage.get("Review", review_id)
     if review is None:
         abort(404)
     storage.delete(review)
@@ -57,7 +57,7 @@ def create_review(place_id):
     """
     CREATE A NEW REVIEW FOR A PLACE
     """
-    place = storage.get(Place, place_id)
+    place = storage.get("Place", place_id)
     if place is None:
         abort(404)
 
@@ -68,7 +68,7 @@ def create_review(place_id):
 
     if 'user_id' not in data:
         abort(400, "Missing user_id")
-    user = storage.get(User, data['user_id'])
+    user = storage.get("User", data['user_id'])
     if user is None:
         abort(404)
     if 'text' not in data:
@@ -87,7 +87,7 @@ def update_review(review_id):
     """
     UPDATE A REVIW BY ID
     """
-    review = storage.get(Review, review_id)
+    review = storage.get("Review", review_id)
     if review is None:
         abort(404)
 
