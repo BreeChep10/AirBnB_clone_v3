@@ -10,6 +10,7 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
+import hashlib
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -58,9 +59,13 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self):
+    def to_dict(self, storage='db'):
         """returns a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
+        """File storage edit"""
+        if storage == "db" and "password" in new_dict:
+            if getenv("HBNB_TYPE") != "db":
+                del new_dict["password"]
         if "created_at" in new_dict:
             new_dict["created_at"] = new_dict["created_at"].strftime(time)
         if "updated_at" in new_dict:
