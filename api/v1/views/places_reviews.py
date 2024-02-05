@@ -46,7 +46,7 @@ def delete_review(review_id):
     review = storage.get("Review", review_id)
     if review is None:
         abort(404)
-    storage.delete(review)
+    review.delete(review)
     storage.save()
     return jsonify({}), 200
 
@@ -69,7 +69,7 @@ def create_review(place_id):
     if 'user_id' not in data:
         abort(400, "Missing user_id")
     user = storage.get("User", data['user_id'])
-    if user is None:
+    if not user:
         abort(404)
     if 'text' not in data:
         abort(400, "Missing text")
@@ -100,3 +100,4 @@ def update_review(review_id):
             setattr(review, k, v)
 
     storage.save()
+    return jsonify(review.to_dict()), 200
