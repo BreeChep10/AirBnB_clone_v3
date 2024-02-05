@@ -25,7 +25,7 @@ def get_reviews_by_place(place_id):
     return jsonify(reviews)
 
 
-@app_views.route('/reviews/<reviews_id>', methods=[
+@app_views.route('/reviews/<review_id>', methods=[
     'GET'], strict_slashes=False)
 def get_review(review_id):
     """
@@ -46,12 +46,12 @@ def delete_review(review_id):
     review = storage.get("Review", review_id)
     if review is None:
         abort(404)
-    review.delete(review)
+    review.delete()
     storage.save()
     return jsonify({}), 200
 
 
-@app_views.route('/places/<p_id>/reviews', methods=[
+@app_views.route('/places/<place_id>/reviews', methods=[
     'POST'], strict_slashes=False)
 def create_review(place_id):
     """
@@ -74,7 +74,8 @@ def create_review(place_id):
     if 'text' not in data:
         abort(400, "Missing text")
 
-    new_review = Review(place_id=place_id, **data)
+    new_review = Review(**data)
+    setattr(new_review, 'place_id', place_id)
     storage.new(new_review)
     storage.save()
 
