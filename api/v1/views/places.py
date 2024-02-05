@@ -80,7 +80,7 @@ def place_search():
 
     if not states_ids and not cities_ids:
         all = [v for k, v in storage.all("Place").items()]
-        if amenity_ids and getenv('HBNB_STORAGE_TYPE') == 'db':
+        if amenity_ids and getenv('HBNB_TYPE_STORAGE') == 'db':
             for item in all:
                 item_amenities = [obj.id for obj in item.amenities]
                 for i in amenity_ids:
@@ -114,7 +114,7 @@ def place_search():
 
     all_places = [x for y in all_cities for x in y.places]
 
-    if amenity_ids and getenv("HBNB_STORAGE_TYPE") == 'db':
+    if amenity_ids and getenv("HBNB_TYPE_STORAGE") == 'db':
         for k, item in enumerate(all_places):
             item_amenity_id = [x.id for x in item.amenities]
             for i in amenity_ids:
