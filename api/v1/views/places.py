@@ -112,7 +112,9 @@ def place_search():
             if obj not in all_cities:
                 all_cities.append(obj)
 
-    all_places = [x for y in all_cities for x in y.places]
+    all_cities = [x.id for x in all_cities]
+    all_places = [v for k, v in storage.all("Place").
+                  items() if v.city_id in all_cities]
 
     if amenity_ids and getenv("HBNB_TYPE_STORAGE") == 'db':
         for k, item in enumerate(all_places):
