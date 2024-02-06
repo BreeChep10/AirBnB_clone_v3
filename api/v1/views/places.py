@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from models import storage
 from models.place import Place
 from flask import jsonify, abort, request
+from os import getenv
 
 
 @app_views.route("/cities/<city_id>/places", methods=[
@@ -71,7 +72,7 @@ def place_search():
 
     data = request.get_json()
 
-    if not data:
+    if data is None:
         abort(400, "Not a JSON")
 
     states_ids = data.get("states")
