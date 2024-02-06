@@ -107,4 +107,10 @@ def place_search():
                 filtered_places.append(place)
         else:
             filtered_places.append(place)
-    return jsonify([obj.to_dict() for obj in filtered_places])
+    result = []
+    for obj in filtered_places:
+        toDict = obj.to_dict()
+        if "amenities" in toDict:
+            del toDict["amenities"]
+        result.append(toDict)
+    return jsonify(result)
