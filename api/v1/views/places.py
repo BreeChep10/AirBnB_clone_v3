@@ -76,28 +76,33 @@ def place_search():
     cities_ids = data.get("cities", [])
     amenity_ids = data.get("amenities", [])
 
+    all_cities = []
+    all_places = []
+
     if not states_ids and not cities_ids:
-        all_places = storage.all("Place").values()
+        all_places =  [v for k, v in storage.all("Place").items()]
     else:
-        all_cities = set()
-        for state_id in states_ids:
-            state = storage.get("State", state_id)
-            if state is not None:
-                all_cities.update(state.cities)
-        for city_id in cities_ids:
-            city = storage.get("City", city_id)
-            if city is not None:
-                all_cities.add(city)
-        all_places = []
-        for city in all_cities:
-            all_places += city.places
+        for id in states_ids:
+            state = storage.get("State", id)
+            if state:
+                all_cities += [city for city in state.cities]
+        for id in cities_ids:
+            city = storage.get("City", id)
+            if city and city not in all_cities:
+                all_cities.append(city)
+
+        for item in all_cities:
+            all_places += item.places
 
     filtered_places = []
     for place in all_places:
         if amenity_ids:
-            place_amenity_ids = [amenity.id for amenity in place.amenities]
-            if all(amenity_id in place_amenity_ids for amenity_id in amenity_ids):
-                filtered_places.append(place)
+            if getenv("HBNB_TYPE_STORAGE") == 'db':
+                place_amenity_ids = [amenity.id for amenity in place.amenities]
             else:
+                place_amenity_ids = place.amenity_ids
+            if all([amenity_id in place_amenity_ids  for  amenity_id in amenity_ids]):
                 filtered_places.append(place)
-    return jsonify([item.to_dict() for item in filtered_places])
+        else:
+            filtered_places.append(place)
+    return jsonify([obj.to_dict() for obj in filtered_places])
