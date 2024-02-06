@@ -64,6 +64,7 @@ def get_place(place_id=""):
             return jsonify(result[0].to_dict()), 200
         abort(400, "Not a JSON")
 
+
 @app_views.route("/places_search", methods=["POST"], strict_slashes=False)
 def place_search():
     """Search for places based on given criteria"""
@@ -80,7 +81,7 @@ def place_search():
     all_places = []
 
     if not states_ids and not cities_ids:
-        all_places =  [v for k, v in storage.all("Place").items()]
+        all_places = [v for k, v in storage.all("Place").items()]
     else:
         for id in states_ids:
             state = storage.get("State", id)
@@ -101,7 +102,8 @@ def place_search():
                 place_amenity_ids = [amenity.id for amenity in place.amenities]
             else:
                 place_amenity_ids = place.amenity_ids
-            if all([amenity_id in place_amenity_ids  for  amenity_id in amenity_ids]):
+            if all([amenity_id in place_amenity_ids
+                    for amenity_id in amenity_ids]):
                 filtered_places.append(place)
         else:
             filtered_places.append(place)
